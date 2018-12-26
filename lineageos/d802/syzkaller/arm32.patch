@@ -1,0 +1,30 @@
+diff --git a/executor/common_linux.h b/executor/common_linux.h
+index 48c2348..115d53d 100644
+--- a/executor/common_linux.h
++++ b/executor/common_linux.h
+@@ -748,7 +748,7 @@ static bool write_file(const char* file, const char* what, ...)
+ #if defined(SYZ_EXECUTOR) || defined(SYZ_SANDBOX_NAMESPACE)
+ static int real_uid;
+ static int real_gid;
+-__attribute__((aligned(64 << 10))) static char sandbox_stack[1 << 20];
++__attribute__((aligned(32 << 10))) static char sandbox_stack[1 << 20];
+
+ static int namespace_sandbox_proc(void* arg)
+ {
+diff --git a/executor/executor.h b/executor/executor.h
+index 669851e..f90ca30 100644
+--- a/executor/executor.h
++++ b/executor/executor.h
+@@ -71,7 +71,11 @@ int running;
+ uint32_t completed;
+ bool collide;
+
+-ALIGNED(64 << 10)
++#ifdef __amd64__
++ALIGNED(64 << 10)
++#else
++ALIGNED(32 << 8)
++#endif
+ char input_data[kMaxInput];
+
+ // We use the default value instead of results of failed syscalls.

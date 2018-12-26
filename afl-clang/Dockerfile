@@ -32,3 +32,8 @@ RUN apt-get -y update && \
  rm -rf /afl-* && \
  apt-get -y autoremove && \
  rm -rf /var/lib/apt/lists/*
+
+ RUN git clone https://github.com/mrash/afl-cov.git && \
+   cd afl-cov && \
+   install -m 755 afl-cov /usr/bin/afl-cov && \
+   cd .. && rm -rf ../afl-cov
